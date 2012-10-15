@@ -1,6 +1,6 @@
 #Benchmark.js
 
-Very simple, javascript Date() dependable, console based benchmarking.
+Very simple, javascript Date() dependent, `console.log` based benchmarking.
 
 Easy to use both for sync and async benchmarking.
 
