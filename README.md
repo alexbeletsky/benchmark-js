@@ -1,42 +1,39 @@
-Benchmark.js
-============
+#Benchmark.js
 
 Very simple, javascript Date() dependable, console based benchmarking.
 
 Easy to use both for sync and async benchmarking.
 
-Code sample
------------
+##Code sample
 
-    benchmark
-        // anonymous benchmark function
-        .add(function () {
-            var range = _.range(1000000);
-        })
-        // use callback without any parameters for benchmarking sync code
-        .add('iterating throught the range of numbers', function () {
-            var count = 0;
-            _.each(_.range(1000000), function () {
-                count++;
-            });
-        })
-        // in case of async methods, use done()
-        .add('reading file contents', function (done) {
-            fs.readFile('benchmark.js', 'utf-8', function (err, data) {
-                done();
-            });
-        })
-        .run();
-
-Output
-------
+```js
+benchmark
+    // anonymous benchmark function
+    .add(function () {
+        var range = _.range(1000000);
+    })
+    // use callback without any parameters for benchmarking sync code
+    .add('iterating throught the range of numbers', function () {
+        var count = 0;
+        _.each(_.range(1000000), function () {
+            count++;
+        });
+    })
+    // in case of async methods, use done()
+    .add('reading file contents', function (done) {
+        fs.readFile('benchmark.js', 'utf-8', function (err, data) {
+            done();
+        });
+    })
+    .run();
+```
+##Output
 
     function took: 172 msec.
     iterating throught the range of numbers took: 265 msec.
     reading file contents took: 0 msec.
 
-Licence
--------
+##Licence
 
 Copyright (C) <2012> <alexander.beletsky@gmail.com>
 
