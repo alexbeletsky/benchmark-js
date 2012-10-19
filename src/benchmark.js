@@ -19,31 +19,64 @@ module.exports = (function () {
         }
     });
 
-    function syncWrap (actionName, options, func) {
-        return _.wrap(func, function(f, next) {
+    function createStrategy(options) {
+        if (options.repeat) {
+            return repeat;
+        } else if (options.repeat && options.average) {
+            return average;
+        }
+
+        return simple;
+
+        function repeat(func) {
             var start = new Date().getTime();
-            var message = actionName + ' took: ';
+            var message = actionName + ' (repeated ' + options.repeat + ' times) took: ';
             var seconds = ' msec.';
 
-            if (options.repeat) {
-                message = actionName + ' (repeated ' + options.repeat + ' times) took: ';
-                for (var i = 0; i < options.repeat; i++) {
-                    f();
-                }
-            } else {
+            for (var i = 0; i < options.repeat; i++) {
                 f();
             }
 
             var finish = new Date().getTime();
             var duration = finish - start;
 
-            if (options.average) {
-                duration = duration / options.repeat;
-                seconds += ' (in average)';
+            console.log (message + duration + seconds);
+        }
+
+        function average(func) {
+            var start = new Date().getTime();
+            var message = actionName + ' (repeated ' + options.repeat + ' times) took: ';
+            var seconds = ' msec. (in average)';
+
+            for (var i = 0; i < options.repeat; i++) {
+                f();
             }
 
-            console.log (message + duration + seconds);
+            var finish = new Date().getTime();
+            var duration = finish - start / options.repeat;
 
+            console.log (message + duration + seconds);
+        }
+
+        function simple(func) {
+            var start = new Date().getTime();
+            var message = actionName + ' took: ';
+            var seconds = ' msec.';
+
+            f();
+
+            var finish = new Date().getTime();
+            var duration = finish - start;
+
+            console.log (message + duration + seconds);
+        }
+    }
+
+    function syncWrap (actionName, options, func) {
+        return _.wrap(func, function(f, next) {
+            var strategy = createStrategy(options);
+            
+            strategy(f);
             next();
         });
     }
