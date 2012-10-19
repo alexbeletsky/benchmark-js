@@ -27,6 +27,23 @@ benchmark('benchmark examples', function () {
             done();
         });
     });
+
+    // repeat the function several times to get total time of execution
+    add ('iterating throught the range of numbers', {repeat: 3}, function () {
+        var count = 0;
+        _.each(_.range(1000000), function () {
+            count++;
+        });
+    });
+
+    // repeat the function several times to get average time of execution
+    add ('iterating throught the range of numbers', {repeat: 3, average: true }, function () {
+        var count = 0;
+        _.each(_.range(1000000), function () {
+            count++;
+        });
+    });
+
 });
 ```
 
