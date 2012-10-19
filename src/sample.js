@@ -25,8 +25,8 @@ benchmark('benchmark examples', function () {
         });
     });
 
-    // use callback without any parameters for benchmarking sync code
-    add ('iterating throught the range of numbers', function () {
+    // repeat the function several times to get average execution
+    add ('iterating throught the range of numbers', {repeat: 5}, function () {
         var count = 0;
         _.each(_.range(1000000), function () {
             count++;
