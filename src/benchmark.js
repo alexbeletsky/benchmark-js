@@ -20,15 +20,18 @@ module.exports = (function () {
     });
 
     function createStrategy(options) {
+        if (options.repeat && options.average) {
+            return average;
+        }
+
+
         if (options.repeat) {
             return repeat;
-        } else if (options.repeat && options.average) {
-            return average;
         }
 
         return simple;
 
-        function repeat(func) {
+        function repeat(actionName, f) {
             var start = new Date().getTime();
             var message = actionName + ' (repeated ' + options.repeat + ' times) took: ';
             var seconds = ' msec.';
@@ -43,7 +46,7 @@ module.exports = (function () {
             console.log (message + duration + seconds);
         }
 
-        function average(func) {
+        function average(actionName, f) {
             var start = new Date().getTime();
             var message = actionName + ' (repeated ' + options.repeat + ' times) took: ';
             var seconds = ' msec. (in average)';
@@ -53,12 +56,12 @@ module.exports = (function () {
             }
 
             var finish = new Date().getTime();
-            var duration = finish - start / options.repeat;
+            var duration = (finish - start) / options.repeat;
 
             console.log (message + duration + seconds);
         }
 
-        function simple(func) {
+        function simple(actionName, f) {
             var start = new Date().getTime();
             var message = actionName + ' took: ';
             var seconds = ' msec.';
@@ -76,7 +79,8 @@ module.exports = (function () {
         return _.wrap(func, function(f, next) {
             var strategy = createStrategy(options);
             
-            strategy(f);
+            strategy(actionName, f);
+
             next();
         });
     }
