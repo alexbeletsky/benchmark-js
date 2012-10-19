@@ -24,4 +24,13 @@ benchmark('benchmark examples', function () {
             done();
         });
     });
+
+    // use callback without any parameters for benchmarking sync code
+    add ('iterating throught the range of numbers', function () {
+        var count = 0;
+        _.each(_.range(1000000), function () {
+            count++;
+        });
+    });
+
 });
