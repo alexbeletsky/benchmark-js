@@ -7,26 +7,29 @@ Easy to use both for sync and async benchmarking.
 ##Code sample
 
 ```js
-benchmark
+benchmark('benchmark examples', function () {
     // anonymous benchmark function
-    .add(function () {
+    add (function () {
         var range = _.range(1000000);
-    })
+    });
+
     // use callback without any parameters for benchmarking sync code
-    .add('iterating throught the range of numbers', function () {
+    add ('iterating throught the range of numbers', function () {
         var count = 0;
         _.each(_.range(1000000), function () {
             count++;
         });
-    })
+    });
+
     // in case of async methods, use done()
-    .add('reading file contents', function (done) {
+    add ('reading file contents', function (done) {
         fs.readFile('benchmark.js', 'utf-8', function (err, data) {
             done();
         });
-    })
-    .run();
+    });
+});
 ```
+
 ##Output
 
     function took: 172 msec.
