@@ -49,9 +49,15 @@ benchmark('benchmark examples', function () {
 
 ##Output
 
-    function took: 172 msec.
-    iterating throught the range of numbers took: 265 msec.
-    reading file contents took: 0 msec.
+    function call took: 183 msec.
+    iterating throught the range of numbers took: 292 msec.
+    reading file contents took: 1 msec.
+    iterating throught the range of numbers (repeated 3 times) took: 871 msec.
+    iterating throught the range of numbers (repeated 3 times) took: 283 msec. (in average)
+
+##Dependencies
+
+* [Underscore.js](http://underscorejs.org/#)
 
 ##Licence
 
