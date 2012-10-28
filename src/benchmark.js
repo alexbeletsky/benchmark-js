@@ -68,8 +68,7 @@ module.exports = (function () {
                 var me = this;
 
                 return _.wrap(func, function(f, next) {
-                    var strategy = me.createStrategySync(options);
-                    
+                    var strategy = me.createStrategy(options);
                     strategy(actionName, f);
 
                     next();
