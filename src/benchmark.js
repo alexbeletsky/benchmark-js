@@ -3,7 +3,7 @@ module.exports = (function () {
     var _ = require('./chain');
     var context = { functions: [] };
 
-    function createStrategy(options) {
+    function createStrategySync(options) {
         if (options.repeat && options.average) {
             return average;
         }
@@ -60,7 +60,7 @@ module.exports = (function () {
 
     function syncWrap (actionName, options, func) {
         return _.wrap(func, function(f, next) {
-            var strategy = createStrategy(options);
+            var strategy = createStrategySync(options);
             
             strategy(actionName, f);
 
