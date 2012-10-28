@@ -1,36 +1,19 @@
 module.exports = (function () {
 
-    var _ = require('underscore');
+    var _ = require('./chain');
     var context = { functions: [] };
-
-    // TODO: move it to separate file
-    _.mixin({
-        chain: function(functions) {
-
-            var current = 0;
-            var next = function () {
-                var func = functions[current++];
-                if (func) {
-                    func(next);
-                }
-            };
-
-            next();
-        }
-    });
 
     function createStrategy(options) {
         if (options.repeat && options.average) {
             return average;
         }
 
-
         if (options.repeat) {
             return repeat;
         }
 
         return simple;
-
+        
         function repeat(actionName, f) {
             var start = new Date().getTime();
             var message = actionName + ' (repeated ' + options.repeat + ' times) took: ';

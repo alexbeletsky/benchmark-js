@@ -41,4 +41,12 @@ benchmark('benchmark examples', function () {
         });
     });
 
+    // // limit a call, if actual benchmark is higher - test will fail
+    // add ('mapping some records', { limit: 100 }, function () {
+    //     var count = 0;
+    //     _.each(_.range(1000000), function () {
+    //         count++;
+    //     });
+    // });
+
 });
