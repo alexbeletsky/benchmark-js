@@ -1,11 +1,12 @@
 module.exports = (function () {
 
     var _ = require('./chain');
-    var context = { functions: [] };
 
     var benchmark = {
         initialize: function () {
             _.bindAll(this);
+
+            this.contexts = {};
         },
 
         sync: {
@@ -163,9 +164,12 @@ module.exports = (function () {
 
         establishContext: function (title, callback) {
             if (callback) {
+                this.currentContext = { functions: [] };
+                this.contexts[title] = this.currentContext;
+
                 callback();
 
-                _.chain(context.functions);
+                _.chain(this.contexts[title].functions);
             }
         },
 
@@ -180,7 +184,7 @@ module.exports = (function () {
             options = options || {};
             var wrap = func.length === 0 ? this.sync.wrap(actionName, options, func) : this.async.wrap(actionName, options, func);
 
-            context.functions.push(wrap);
+            this.currentContext.functions.push(wrap);
         }
 
     };
