@@ -62,11 +62,13 @@ benchmark('benchmark examples', function () {
 
 ##Output
 
-    function call took: 183 msec.
-    iterating throught the range of numbers took: 292 msec.
-    reading file contents took: 1 msec.
-    iterating throught the range of numbers (repeated 3 times) took: 871 msec.
+    function call took: 192 msec.
+    iterating throught the range of numbers took: 296 msec.
+    reading file contents took: 0 msec.
+    iterating throught the range of numbers (repeated 3 times) took: 854 msec.
     iterating throught the range of numbers (repeated 3 times) took: 283 msec. (in average)
+    reading file contents (repeated 10 times) took: 4 msec.
+    reading file contents (repeated 10 times) took: 0.4 msec. (in average)
 
 ##Dependencies
 

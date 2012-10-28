@@ -56,10 +56,3 @@ benchmark('benchmark examples - suite 1', function () {
     });
 
 });
-
-benchmark ('benchmark examples - suite 2', function () {
-    // anonymous benchmark function
-    add (function () {
-        var range = _.range(1000000);
-    });
-});
