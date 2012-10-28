@@ -41,6 +41,21 @@ benchmark('benchmark examples', function () {
         });
     });
 
+    // same for async call - repeat the function several times to get total time of execution
+    add ('reading file contents', {repeat: 3}, function (done) {
+        fs.readFile('benchmark.js', 'utf-8', function (err, data) {
+            done();
+        });
+    });
+
+    // same for async call - repeat the function several times to get average time of execution
+    add ('reading file contents', {repeat: 3, average: true }, function (done) {
+        fs.readFile('benchmark.js', 'utf-8', function (err, data) {
+            done();
+        });
+    });
+
+
     // // limit a call, if actual benchmark is higher - test will fail
     // add ('mapping some records', { limit: 100 }, function () {
     //     var count = 0;

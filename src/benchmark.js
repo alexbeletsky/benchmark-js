@@ -20,7 +20,7 @@ module.exports = (function () {
 
                 return simple;
                 
-                function repeat(actionName, f) {
+                function repeat(actionName, f, next) {
                     var start = new Date().getTime();
                     var message = actionName + ' (repeated ' + options.repeat + ' times) took: ';
                     var seconds = ' msec.';
@@ -33,9 +33,11 @@ module.exports = (function () {
                     var duration = finish - start;
 
                     console.log (message + duration + seconds);
+
+                    next();
                 }
 
-                function average(actionName, f) {
+                function average(actionName, f, next) {
                     var start = new Date().getTime();
                     var message = actionName + ' (repeated ' + options.repeat + ' times) took: ';
                     var seconds = ' msec. (in average)';
@@ -48,9 +50,11 @@ module.exports = (function () {
                     var duration = (finish - start) / options.repeat;
 
                     console.log (message + duration + seconds);
+
+                    next();
                 }
 
-                function simple(actionName, f) {
+                function simple(actionName, f, next) {
                     var start = new Date().getTime();
                     var message = actionName + ' took: ';
                     var seconds = ' msec.';
@@ -61,6 +65,8 @@ module.exports = (function () {
                     var duration = finish - start;
 
                     console.log (message + duration + seconds);
+
+                    next();
                 }
             },
 
@@ -69,16 +75,16 @@ module.exports = (function () {
 
                 return _.wrap(func, function(f, next) {
                     var strategy = me.createStrategy(options);
-                    strategy(actionName, f);
-
-                    next();
+                    strategy(actionName, f, next);
                 });
             }
         },
 
         async: {
-            wrap: function asyncWrap(actionName, options, func) {
-                return _.wrap(func, function (f, next) {
+            createStrategy: function (options) {
+                return simple;
+
+                function simple (actionName, f, next) {
                     var start = new Date().getTime();
 
                     var callback = function () {
@@ -91,6 +97,15 @@ module.exports = (function () {
                     };
 
                     f(callback);
+                }
+            },
+
+            wrap: function asyncWrap(actionName, options, func) {
+                var me = this;
+
+                return _.wrap(func, function (f, next) {
+                    var strategy = me.createStrategy(options);
+                    strategy(actionName, f, next);
                 });
             }
         },
