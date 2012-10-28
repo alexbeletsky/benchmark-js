@@ -3,8 +3,19 @@ var fs = require('fs');
 
 var benchmark = require('./benchmark').benchmark;
 var add = require('./benchmark').add;
+var beforeEach = require('./benchmark').beforeEach;
+var afterEach = require('./benchmark').afterEach;
 
 benchmark('benchmark examples - suite 1', function () {
+
+    beforeEach(function () {
+        // setup test system
+    });
+
+    afterEach(function () {
+        // dispose test system
+    });
+
     // anonymous benchmark function
     add (function () {
         var range = _.range(1000000);

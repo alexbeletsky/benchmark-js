@@ -4,7 +4,9 @@ Very simple, javascript Date() dependent, `console.log` based benchmarking.
 
 Easy to use both for sync and async benchmarking.
 
-##Code sample
+##API Examples
+
+###Benchmarking
 
 ```js
 benchmark('benchmark examples', function () {
@@ -56,6 +58,22 @@ benchmark('benchmark examples', function () {
         fs.readFile('benchmark.js', 'utf-8', function (err, data) {
             done();
         });
+    });
+});
+```
+
+###Setuping tests
+
+In case of system under test have to be initialized.
+
+```js
+benchmark('benchmark examples - suite 1', function () {
+    beforeEach(function () {
+        // setup test system
+    });
+
+    afterEach(function () {
+        // dispose test system
     });
 });
 ```

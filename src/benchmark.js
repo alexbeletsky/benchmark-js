@@ -9,8 +9,9 @@ module.exports = (function () {
             this.contexts = {};
         },
 
+        // Sync functions benchmarking
         sync: {
-            createStrategy: function (options) {
+            createStrategy: function (context, options) {
                 if (options.repeat && options.average) {
                     return average;
                 }
@@ -27,7 +28,7 @@ module.exports = (function () {
 
                     var start = new Date().getTime();
                     for (var i = 0; i < options.repeat; i++) {
-                        f();
+                        callFunction(f);
                     }
 
                     var finish = new Date().getTime();
@@ -44,7 +45,7 @@ module.exports = (function () {
 
                     var start = new Date().getTime();
                     for (var i = 0; i < options.repeat; i++) {
-                        f();
+                        callFunction(f);
                     }
 
                     var finish = new Date().getTime();
@@ -60,7 +61,7 @@ module.exports = (function () {
                     var seconds = ' msec.';
 
                     var start = new Date().getTime();
-                    f();
+                    callFunction(f);
                     var finish = new Date().getTime();
                     var duration = finish - start;
 
@@ -68,20 +69,33 @@ module.exports = (function () {
 
                     next();
                 }
+
+                function callFunction(f) {
+                    if (context.beforeEach) {
+                        context.beforeEach();
+                    }
+
+                    f();
+
+                    if (context.afterEach) {
+                        context.afterEach();
+                    }
+                }
             },
 
-            wrap: function syncWrap (actionName, options, func) {
+            wrap: function syncWrap (actionName, context, options, func) {
                 var me = this;
 
                 return _.wrap(func, function(f, next) {
-                    var strategy = me.createStrategy(options);
+                    var strategy = me.createStrategy(context, options);
                     strategy(actionName, f, next);
                 });
             }
         },
 
+        // Async function benchmarking
         async: {
-            createStrategy: function (options) {
+            createStrategy: function (context, options) {
                 if (options.repeat && options.average) {
                     return average;
                 }
@@ -96,11 +110,6 @@ module.exports = (function () {
                     var message = actionName + ' (repeated ' + options.repeat + ' times) took: ';
                     var seconds = ' msec.';
 
-                    var chain = [];
-                    for (var i = 0; i < options.repeat; i++) {
-                        chain.push(f);
-                    }
-
                     var start = new Date().getTime();
                     var callback = function () {
                         var finish = new Date().getTime();
@@ -111,17 +120,17 @@ module.exports = (function () {
                         next();
                     };
 
+                    var chain = [];
+                    for (var i = 0; i < options.repeat; i++) {
+                        chain.push(callFunction(f, callback));
+                    }
+
                     _.chain(chain, callback);
                 }
 
                 function average(actionName, f, next) {
                     var message = actionName + ' (repeated ' + options.repeat + ' times) took: ';
                     var seconds = ' msec. (in average)';
-
-                    var chain = [];
-                    for (var i = 0; i < options.repeat; i++) {
-                        chain.push(f);
-                    }
 
                     var start = new Date().getTime();
                     var callback = function () {
@@ -132,6 +141,11 @@ module.exports = (function () {
 
                         next();
                     };
+
+                    var chain = [];
+                    for (var i = 0; i < options.repeat; i++) {
+                        chain.push(callFunction(f, callback));
+                    }
 
                     _.chain(chain, callback);
                 }
@@ -148,15 +162,30 @@ module.exports = (function () {
                         next();
                     };
 
-                    f(callback);
+                    callFunction(f, callback)();
                 }
+
+                function callFunction(f, callback) {
+                    return function () {
+                        if (context.beforeEach) {
+                            context.beforeEach();
+                        }
+
+                        f(callback);
+
+                        if (context.afterEach) {
+                            context.afterEach();
+                        }
+                    };
+                }
+
             },
 
-            wrap: function asyncWrap(actionName, options, func) {
+            wrap: function asyncWrap(actionName, context, options, func) {
                 var me = this;
 
                 return _.wrap(func, function (f, next) {
-                    var strategy = me.createStrategy(options);
+                    var strategy = me.createStrategy(context, options);
                     strategy(actionName, f, next);
                 });
             }
@@ -167,8 +196,10 @@ module.exports = (function () {
                 this.currentContext = { functions: [] };
                 this.contexts[title] = this.currentContext;
 
+                // run all `add` functions to prepare context of testing..
                 callback();
 
+                // launch tests functions
                 _.chain(this.contexts[title].functions);
             }
         },
@@ -182,9 +213,17 @@ module.exports = (function () {
             }
 
             options = options || {};
-            var wrap = func.length === 0 ? this.sync.wrap(actionName, options, func) : this.async.wrap(actionName, options, func);
+            var wrap = func.length === 0 ? this.sync.wrap(actionName, this.currentContext, options, func) : this.async.wrap(actionName, this.currentContext, options, func);
 
             this.currentContext.functions.push(wrap);
+        },
+
+        beforeEach: function (callback) {
+            this.currentContext.beforeEach = callback;
+        },
+
+        afterEach: function (callback) {
+            this.currentContext.afterEach = callback;
         }
 
     };
@@ -193,7 +232,9 @@ module.exports = (function () {
 
     return {
         benchmark: benchmark.establishContext,
-        add: benchmark.addBenchmark
+        add: benchmark.addBenchmark,
+        beforeEach: benchmark.beforeEach,
+        afterEach: benchmark.afterEach
     };
 
 })();
