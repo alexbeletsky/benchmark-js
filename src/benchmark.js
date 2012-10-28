@@ -21,10 +21,10 @@ module.exports = (function () {
                 return simple;
                 
                 function repeat(actionName, f, next) {
-                    var start = new Date().getTime();
                     var message = actionName + ' (repeated ' + options.repeat + ' times) took: ';
                     var seconds = ' msec.';
 
+                    var start = new Date().getTime();
                     for (var i = 0; i < options.repeat; i++) {
                         f();
                     }
@@ -38,10 +38,10 @@ module.exports = (function () {
                 }
 
                 function average(actionName, f, next) {
-                    var start = new Date().getTime();
                     var message = actionName + ' (repeated ' + options.repeat + ' times) took: ';
                     var seconds = ' msec. (in average)';
 
+                    var start = new Date().getTime();
                     for (var i = 0; i < options.repeat; i++) {
                         f();
                     }
@@ -55,12 +55,11 @@ module.exports = (function () {
                 }
 
                 function simple(actionName, f, next) {
-                    var start = new Date().getTime();
                     var message = actionName + ' took: ';
                     var seconds = ' msec.';
 
+                    var start = new Date().getTime();
                     f();
-
                     var finish = new Date().getTime();
                     var duration = finish - start;
 
@@ -82,7 +81,59 @@ module.exports = (function () {
 
         async: {
             createStrategy: function (options) {
+                if (options.repeat && options.average) {
+                    return average;
+                }
+
+                if (options.repeat) {
+                    return repeat;
+                }
+
                 return simple;
+
+                function repeat(actionName, f, next) {
+                    var message = actionName + ' (repeated ' + options.repeat + ' times) took: ';
+                    var seconds = ' msec.';
+
+                    var chain = [];
+                    for (var i = 0; i < options.repeat; i++) {
+                        chain.push(f);
+                    }
+
+                    var start = new Date().getTime();
+                    var callback = function () {
+                        var finish = new Date().getTime();
+                        var duration = finish - start;
+
+                        console.log (message + duration + seconds);
+
+                        next();
+                    };
+
+                    _.chain(chain, callback);
+                }
+
+                function average(actionName, f, next) {
+                    var message = actionName + ' (repeated ' + options.repeat + ' times) took: ';
+                    var seconds = ' msec. (in average)';
+
+                    var chain = [];
+                    for (var i = 0; i < options.repeat; i++) {
+                        chain.push(f);
+                    }
+
+                    var start = new Date().getTime();
+                    var callback = function () {
+                        var finish = new Date().getTime();
+                        var duration = (finish - start) / options.repeat;
+
+                        console.log (message + duration + seconds);
+
+                        next();
+                    };
+
+                    _.chain(chain, callback);
+                }
 
                 function simple (actionName, f, next) {
                     var start = new Date().getTime();

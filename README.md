@@ -44,6 +44,19 @@ benchmark('benchmark examples', function () {
         });
     });
 
+    // same for async call - repeat the function several times to get total time of execution
+    add ('reading file contents', {repeat: 10}, function (done) {
+        fs.readFile('benchmark.js', 'utf-8', function (err, data) {
+            done();
+        });
+    });
+
+    // same for async call - repeat the function several times to get average time of execution
+    add ('reading file contents', {repeat: 10, average: true }, function (done) {
+        fs.readFile('benchmark.js', 'utf-8', function (err, data) {
+            done();
+        });
+    });
 });
 ```
 
