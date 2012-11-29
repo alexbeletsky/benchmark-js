@@ -5,7 +5,7 @@
         module.exports = factory(_);
     // for browser
     } else {
-        factory(window._);
+        window.benchmark = factory(window._);
     }
 
 })(function (_) {

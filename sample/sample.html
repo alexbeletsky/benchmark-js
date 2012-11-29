@@ -1,0 +1,48 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <meta name="vkvadrate.com - social network for real estate" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <script type="text/javascript" src="../node_modules/underscore/underscore.js"></script>
+    <script type="text/javascript" src="../src/benchmark-js.js"></script>
+
+    <script>
+        var add = window.benchmark.add;
+        var beforeEach = window.benchmark.beforeEach;
+        var afterEach = window.benchmark.afterEach;
+        var benchmark = window.benchmark.benchmark;
+
+        benchmark('benchmark examples - suite 1', function () {
+
+            beforeEach(function () {
+                // setup test system
+            });
+
+            afterEach(function () {
+                // dispose test system
+            });
+
+            // anonymous benchmark function
+            add (function () {
+                var range = _.range(1000000);
+            });
+
+            // use callback without any parameters for benchmarking sync code
+            add ('iterating throught the range of numbers', function () {
+                var count = 0;
+                _.each(_.range(1000000), function () {
+                    count++;
+                });
+            });
+
+        });
+
+    </script>
+</head>
+<body>
+</body>
+</html>
