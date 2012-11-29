@@ -1,3 +1,6 @@
+/*! benchmark-js - v0.0.1 - 2012-11-29
+* Copyright (c) 2012 ; Licensed  */
+
 module.exports = (function () {
 
     var _ = require('./chain');

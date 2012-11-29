@@ -1,10 +1,10 @@
 var _ = require('underscore');
 var fs = require('fs');
 
-var benchmark = require('./benchmark').benchmark;
-var add = require('./benchmark').add;
-var beforeEach = require('./benchmark').beforeEach;
-var afterEach = require('./benchmark').afterEach;
+var benchmark = require('../src/benchmark-js').benchmark;
+var add = require('../src/benchmark-js').add;
+var beforeEach = require('../src/benchmark-js').beforeEach;
+var afterEach = require('../src/benchmark-js').afterEach;
 
 benchmark('benchmark examples - suite 1', function () {
 

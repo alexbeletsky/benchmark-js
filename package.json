@@ -2,7 +2,7 @@
   "author": "Alexander Beletsky <alexander.beletsky@gmail.com>",
   "name": "benchmark-js",
   "description": "Simple benchmarking of JS functions",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "repository": {
     "type": "git",
     "url": "git://github.com/alexanderbeletsky/benchmark-js.git"
