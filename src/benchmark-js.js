@@ -1,6 +1,14 @@
-var _ = require('underscore');
+(function (factory) {
+    // for node js
+    if (typeof require === 'function' && module.exports) {
+        var _ = require('underscore');
+        module.exports = factory(_);
+    // for browser
+    } else {
+        factory(window._);
+    }
 
-module.exports = (function () {
+})(function (_) {
 
     _.mixin({
         chain: function(functions, callback) {
@@ -253,4 +261,4 @@ module.exports = (function () {
         afterEach: benchmark.afterEach
     };
 
-})();
+});
